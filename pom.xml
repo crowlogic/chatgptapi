@@ -4,16 +4,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.crowlogic</groupId>
-	<artifactId>fred</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<groupId>ai.open</groupId>
+	<artifactId>chatgpt</artifactId>
+	<version>0.0.1</version>
 	<packaging>jar</packaging>
 
-	<name>fred</name>
+	<name>chatgpt api</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<mainClass>net.crowlogic.fred.MainApp</mainClass>
 	</properties>
 
 	<dependencies>
@@ -44,11 +43,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-fxml</artifactId>
-			<version>20.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-media</artifactId>
 			<version>20.0.2</version>
 		</dependency>
@@ -56,28 +50,6 @@
 
 	<build>
 		<plugins>
-			<!-- adds file to let you run program outside of IDE -->
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<configuration>
-							<tasks>
-								<echo
-									file="${project.build.directory}/runme.bat">
-									start
-									jlink-image\bin\javaw -jar
-									modules\${project.artifactId}-${project.version}.jar</echo>
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
 			<!-- sets up the version of Java you are running -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -93,71 +65,6 @@
 						<version>6.2.1</version>
 					</dependency>
 				</dependencies>
-			</plugin>
-
-			<!-- Adds the mainClass to the jar so it will run outside -->
-			<plugin>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.1.0</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>${mainClass}</mainClass>
-						</manifest>
-					</archive>
-					<outputDirectory>${project.build.directory}/modules</outputDirectory>
-				</configuration>
-			</plugin>
-
-			<!-- Makes the jLink setup so you can give it to your friends  -->
-			<plugin>
-				<groupId>org.moditect</groupId>
-				<artifactId>moditect-maven-plugin</artifactId>
-				<version>1.0.0.Beta2</version>
-				<executions>
-					<execution>
-						<id>create-runtime-image</id>
-						<phase>package</phase>
-						<goals>
-							<goal>create-runtime-image</goal>
-						</goals>
-						<configuration>
-							<modulePath>
-								<path>${project.build.directory}/modules</path>
-							</modulePath>
-							<modules>
-								<module>${project.groupId}</module>
-							</modules>
-							<launcher>
-								<name>${project.groupId}</name>
-
-							</launcher>
-							<compression>2</compression>
-							<stripDebug>true</stripDebug>
-							<outputDirectory>
-								${project.build.directory}/jlink-image</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- Copies the depend FX files to your program  -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/modules</outputDirectory>
-							<includeScope>runtime</includeScope>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
