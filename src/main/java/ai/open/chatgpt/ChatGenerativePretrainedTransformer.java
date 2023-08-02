@@ -1,48 +1,34 @@
 package ai.open.chatgpt;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
-import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.*;
+import org.openqa.selenium.firefox.*;
 
 public class ChatGenerativePretrainedTransformer
 {
 
   private WebDriver driver;
-  private String    firefoxPath;
   private String    geckoDriverPath;
 
-  public ChatGenerativePretrainedTransformer(String firefoxPath,
-                                             String geckoDriverPath)
+  public ChatGenerativePretrainedTransformer(String geckoDriverPath)
   {
-    this.firefoxPath     = firefoxPath;
     this.geckoDriverPath = geckoDriverPath;
     System.setProperty("webdriver.gecko.driver", this.geckoDriverPath);
 
-    String url = "https://chat.openai.com";
-    int    freePort;
+    String url      = "https://chat.openai.com";
+    int    freePort = 31337;
     try
     {
-      freePort = findAvailablePort();
+      // freePort = findAvailablePort();
 
-      launchFirefoxWithRemoteDebugging(freePort);
       this.driver = setupWebDriver(freePort);
       driver.get(url);
       waitForHumanVerification();
     }
-    catch (IOException | InterruptedException e)
+    catch (Exception e)
     {
       throw new UnsupportedOperationException(e.getMessage(),
                                               e);
@@ -51,34 +37,16 @@ public class ChatGenerativePretrainedTransformer
 
   private int findAvailablePort() throws IOException
   {
-    ServerSocket s    = new ServerSocket(0);
-    int          port = s.getLocalPort();
-    s.close();
-    return port;
-  }
-
-  @SuppressWarnings("deprecation")
-  private void launchFirefoxWithRemoteDebugging(int port)
-  {
-    new Thread(() ->
+    try ( ServerSocket s = new ServerSocket(0))
     {
-      try
-      {
-        String command = String.format("%s --remote-debugging-port=%d --user-data-dir=remote-profile", firefoxPath, port);
-        Runtime.getRuntime().exec(command);
-      }
-      catch (IOException e)
-      {
-        throw new RuntimeException(e.getMessage(),
-                                   e);
-      }
-    }).start();
+      return s.getLocalPort();
+    }
   }
 
   private WebDriver setupWebDriver(int port)
   {
     FirefoxOptions options = new FirefoxOptions();
-    options.addArguments("--start-debugger-server=" + port);
+    options.addArguments(String.format("-b /usr/bin/firefox-esr --connect-existing --marionette-port %s --start-debugger-server=", port));
     FirefoxProfile profile = new FirefoxProfile();
     options.setProfile(profile);
     return new FirefoxDriver(options);
@@ -151,8 +119,8 @@ public class ChatGenerativePretrainedTransformer
     }
     catch (IOException e)
     {
-      throw new UnsupportedOperationException(e.getMessage(),
-                                              e);
+      throw new RuntimeException(e.getMessage(),
+                                 e);
     }
   }
 

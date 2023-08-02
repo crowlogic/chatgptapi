@@ -8,11 +8,10 @@ public class MainApp
     // launch(args);
 
     // Create an instance
-    ChatGenerativePretrainedTransformer chatgpt = new ChatGenerativePretrainedTransformer("/usr/bin/firefox-esr",
-                                                      "/usr/bin/geckodriver");
+    ChatGenerativePretrainedTransformer chatgpt = new ChatGenerativePretrainedTransformer("/usr/bin/geckodriver");
 
     // Define a prompt and send it to chatgpt
-    String            prompt  = "What are the benefits of exercise?";
+    String                              prompt  = "What are the benefits of exercise?";
     chatgpt.sendPromptToChatGPT(prompt);
 
     // Retrieve the last response from ChatGPT
