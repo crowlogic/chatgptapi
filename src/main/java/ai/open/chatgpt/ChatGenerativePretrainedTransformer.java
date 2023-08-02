@@ -25,7 +25,7 @@ public class ChatGenerativePretrainedTransformer
   private String    geckoDriverPath;
 
   public ChatGenerativePretrainedTransformer(String firefoxPath,
-                           String geckoDriverPath)
+                                             String geckoDriverPath)
   {
     this.firefoxPath     = firefoxPath;
     this.geckoDriverPath = geckoDriverPath;
@@ -37,9 +37,10 @@ public class ChatGenerativePretrainedTransformer
     {
       freePort = findAvailablePort();
 
-      launchFirefoxWithRemoteDebugging(freePort, url);
-      waitForHumanVerification();
+      launchFirefoxWithRemoteDebugging(freePort);
       this.driver = setupWebDriver(freePort);
+      driver.get(url);
+      waitForHumanVerification();
     }
     catch (IOException | InterruptedException e)
     {
@@ -57,14 +58,13 @@ public class ChatGenerativePretrainedTransformer
   }
 
   @SuppressWarnings("deprecation")
-  private void launchFirefoxWithRemoteDebugging(int port, String url)
+  private void launchFirefoxWithRemoteDebugging(int port)
   {
     new Thread(() ->
     {
       try
       {
-        String command = this.firefoxPath + " --remote-debugging-port=" + port + " --user-data-dir=remote-profile "
-                      + url;
+        String command = String.format("%s --remote-debugging-port=%d --user-data-dir=remote-profile", firefoxPath, port);
         Runtime.getRuntime().exec(command);
       }
       catch (IOException e)
@@ -114,6 +114,7 @@ public class ChatGenerativePretrainedTransformer
 
   public void sendPromptToChatGPT(String prompt)
   {
+    System.out.println("source=" + driver.getPageSource());
     WebElement inputBox = driver.findElement(By.id("prompt-textarea"));
     ((JavascriptExecutor) driver).executeScript("arguments[0].value = '" + prompt + "';", inputBox);
     inputBox.sendKeys(Keys.RETURN);
