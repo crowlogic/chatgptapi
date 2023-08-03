@@ -13,6 +13,8 @@ public class ChatGenerativePretrainedTransformer
   private WebDriver driver;
   private String    geckoDriverPath;
 
+  private String    profileDirectory = "/home/crow/.mozilla/firefox-esr/j80r0jp8.default-esr102";
+
   public ChatGenerativePretrainedTransformer(String geckoDriverPath)
   {
     this.geckoDriverPath = geckoDriverPath;
@@ -27,6 +29,7 @@ public class ChatGenerativePretrainedTransformer
       this.driver = setupWebDriver(freePort);
       driver.get(url);
       waitForHumanVerification();
+      System.err.println( "Driver currently at " + driver.getCurrentUrl() );
     }
     catch (Exception e)
     {
@@ -46,43 +49,26 @@ public class ChatGenerativePretrainedTransformer
   private WebDriver setupWebDriver(int port)
   {
     FirefoxOptions options = new FirefoxOptions();
-    options.addArguments(String.format("-b /usr/bin/firefox-esr --connect-existing --marionette-port %s --start-debugger-server=", port));
-    FirefoxProfile profile = new FirefoxProfile();
+    options.addArguments(String.format("-b /usr/bin/firefox-esr --connect-existing --marionette-port %s --start-debugger-server=",
+                                       port));
+    FirefoxProfile profile = new FirefoxProfile(new File(profileDirectory));
     options.setProfile(profile);
+    profile.setAcceptUntrustedCertificates(true);
+    profile.setAssumeUntrustedCertificateIssuer(true);
     return new FirefoxDriver(options);
   }
 
   private void waitForHumanVerification() throws InterruptedException
   {
-    try ( Scanner input = new Scanner(System.in))
+    System.err.println( "Waiting for URL redirect to https://chat.openai.com/");
+    while (!driver.getCurrentUrl().equals("https://chat.openai.com/"))
     {
-      System.out.println("You need to manually complete the log-in or the human verification if required.");
-
-      while (true)
-      {
-        System.out.println("Enter 'y' if you have completed the log-in or the human verification, or 'n' to check again: ");
-        String userInput = input.nextLine().toLowerCase();
-
-        if (userInput.equals("y"))
-        {
-          System.out.println("Continuing with the automation process...");
-          break;
-        }
-        else if (userInput.equals("n"))
-        {
-          System.out.println("Waiting for you to complete the human verification...");
-        }
-        else
-        {
-          System.out.println("Invalid input. Please enter 'y' or 'n'.");
-        }
-      }
+      Thread.sleep(1000);
     }
   }
 
   public void sendPromptToChatGPT(String prompt)
   {
-    System.out.println("source=" + driver.getPageSource());
     WebElement inputBox = driver.findElement(By.id("prompt-textarea"));
     ((JavascriptExecutor) driver).executeScript("arguments[0].value = '" + prompt + "';", inputBox);
     inputBox.sendKeys(Keys.RETURN);
@@ -127,7 +113,8 @@ public class ChatGenerativePretrainedTransformer
   public String returnLastResponse()
   {
     List<WebElement> responseElements = this.driver.findElements(By.cssSelector("div.text-base"));
-    return responseElements.get(responseElements.size() - 1).getText();
+
+    return responseElements.isEmpty() ? null : responseElements.get(responseElements.size() - 1).getText();
   }
 
   public void quit()
