@@ -13,7 +13,7 @@ public class LatexUnfucker
   public static String unfuck(String fuckedResponse)
   {
     String unfuckedResponse = fuckedResponse.replace("\\[", "$$")
-                                            .replace("\\]", "$$'")
+                                            .replace("\\]", "$$")
                                             .replace("\\(", "$")
                                             .replace("\\)", "$");
     return unfuckedResponse;
