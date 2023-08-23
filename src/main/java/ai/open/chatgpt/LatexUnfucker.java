@@ -7,7 +7,7 @@ public class LatexUnfucker
    * 
    * @param fuckedResponse
    * 
-   * @return unfuckedResponse with the fucking \[, and \] replace with fucking $$
+   * @return unfuckedResponse with the fucking \[, and \] replaced with fucking $$
    *         and fucking \(, and \) replaced with fucking $$
    */
   public static String unfuck(String fuckedResponse)
