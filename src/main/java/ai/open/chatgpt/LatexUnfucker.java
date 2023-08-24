@@ -1,7 +1,5 @@
 package ai.open.chatgpt;
 
-import java.util.regex.Matcher;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,38 +13,74 @@ public class LatexUnfucker extends
                            Application
 {
 
-  public static String unfuck(String fuckedResponse)
+  public static String unfuck(String input)
   {
-    String unfuckedResponse = fuckedResponse.replace("\\[", "$$ ")
-                                            .replace("\\]", " $$")
-                                            .replace("\\(", " $")
-                                            .replace("\\)", "$ ")
-                                            .replace("\\{", "\\lbrace ")
-                                            .replace("\\}", " \\rbrace");
+    StringBuilder output             = new StringBuilder();
+    StringBuilder buffer             = new StringBuilder();
+    boolean       insideMath         = false;
+    boolean       insideDoubleDollar = false;
 
-    // Remove extra whitespaces between $ and content, but only at the very inside
-    // part
-    unfuckedResponse = unfuckedResponse.replaceAll(" \\$\\s+([^$]+)\\s+\\$ ",
-                                                   Matcher.quoteReplacement(" \\$") + "$1"
-                                                                 + Matcher.quoteReplacement("\\$ "));
-
-    // Ensure there is always a space after $$
-    unfuckedResponse = unfuckedResponse.replaceAll("\\$\\$([^ ])", "\\$\\$ $1");
-
-    // Ensure the closing $$ is on the same line as the opening $$
-    String[]      lines = unfuckedResponse.split("\n");
-    StringBuilder sb    = new StringBuilder();
-    for (String line : lines)
+    for (int i = 0; i < input.length(); i++)
     {
-      if (line.contains("$$"))
+      char c = input.charAt(i);
+      if (insideMath || insideDoubleDollar)
       {
-        line = line.replaceAll("\\s+\\$\\$", "$$");
+        if ((insideMath && i < input.length() - 1 && c == '\\' && input.charAt(i + 1) == ')')
+                      || (insideDoubleDollar && i < input.length() - 1 && c == '\\' && input.charAt(i + 1) == ']'))
+        {
+          if (insideDoubleDollar)
+          {
+            insideDoubleDollar = false;
+            output.append(buffer.toString().trim()).append("$$");
+          }
+          else
+          {
+            insideMath = false;
+            output.append(buffer.toString().trim()).append("$");
+          }
+          buffer.setLength(0);
+          i++; // Skip the next character as well
+        }
+        else
+        {
+          buffer.append(c);
+        }
       }
-      sb.append(line).append("\n");
+      else
+      {
+        if (i < input.length() - 1 && c == '\\' && (input.charAt(i + 1) == '(' || input.charAt(i + 1) == '['))
+        {
+          if (input.charAt(i + 1) == '[')
+          {
+            insideDoubleDollar = true;
+            output.append("$$");
+          }
+          else
+          {
+            insideMath = true;
+            if (output.length() > 0 && output.charAt(output.length() - 1) == ' ')
+            {
+              output.append("$");
+            }
+            else
+            {
+              output.append(" $");
+            }
+          }
+          i++; // Skip the next character as well
+        }
+        else
+        {
+          output.append(c);
+        }
+      }
     }
-    unfuckedResponse = sb.toString().trim();
 
-    return unfuckedResponse;
+    String result = output.toString();
+    result = result.replace("\\{", "\\lbrace ");
+    result = result.replace("\\}", " \\rbrace");
+
+    return result;
   }
 
   @Override
