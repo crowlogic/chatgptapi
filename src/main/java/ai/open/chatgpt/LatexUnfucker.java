@@ -52,11 +52,11 @@ public class LatexUnfucker extends
       clipboard.setContent(content);
     });
 
-    VBox vbox = new VBox(inputArea,
-                         processButton,
-                         outputArea,
-                         copyButton);
-    vbox.getChildren().add(inputArea);
+    VBox  vbox  = new VBox(inputArea,
+                           processButton,
+                           outputArea,
+                           copyButton);
+
     Scene scene = new Scene(vbox,
                             400,
                             300);

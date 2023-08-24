@@ -2,7 +2,7 @@ package ai.open.chatgpt;
 
 import java.io.*;
 import java.net.ServerSocket;
-import java.util.*;
+import java.util.List;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.*;
@@ -29,7 +29,7 @@ public class ChatGenerativePretrainedTransformer
       this.driver = setupWebDriver(freePort);
       driver.get(url);
       waitForHumanVerification();
-      System.err.println( "Driver currently at " + driver.getCurrentUrl() );
+      System.err.println("Driver currently at " + driver.getCurrentUrl());
     }
     catch (Exception e)
     {
@@ -60,7 +60,7 @@ public class ChatGenerativePretrainedTransformer
 
   private void waitForHumanVerification() throws InterruptedException
   {
-    System.err.println( "Waiting for URL redirect to https://chat.openai.com/");
+    System.err.println("Waiting for URL redirect to https://chat.openai.com/");
     while (!driver.getCurrentUrl().equals("https://chat.openai.com/"))
     {
       Thread.sleep(1000);
