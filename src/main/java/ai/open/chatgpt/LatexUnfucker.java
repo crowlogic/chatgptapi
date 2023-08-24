@@ -1,5 +1,7 @@
 package ai.open.chatgpt;
 
+import java.util.regex.Matcher;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,20 +17,44 @@ public class LatexUnfucker extends
 
   public static String unfuck(String fuckedResponse)
   {
-    String unfuckedResponse = fuckedResponse.replace("\\[", "$$")
-                                            .replace("\\]", "$$")
-                                            .replace("\\(", "$")
-                                            .replace("\\)", "$");
+    String unfuckedResponse = fuckedResponse.replace("\\[", "$$ ")
+                                            .replace("\\]", " $$")
+                                            .replace("\\(", " $")
+                                            .replace("\\)", "$ ")
+                                            .replace("\\{", "\\lbrace ")
+                                            .replace("\\}", " \\rbrace");
+
+    // Remove extra whitespaces between $ and content, but only at the very inside
+    // part
+    unfuckedResponse = unfuckedResponse.replaceAll(" \\$\\s+([^$]+)\\s+\\$ ",
+                                                   Matcher.quoteReplacement(" \\$") + "$1"
+                                                                 + Matcher.quoteReplacement("\\$ "));
+
+    // Ensure there is always a space after $$
+    unfuckedResponse = unfuckedResponse.replaceAll("\\$\\$([^ ])", "\\$\\$ $1");
+
+    // Ensure the closing $$ is on the same line as the opening $$
+    String[]      lines = unfuckedResponse.split("\n");
+    StringBuilder sb    = new StringBuilder();
+    for (String line : lines)
+    {
+      if (line.contains("$$"))
+      {
+        line = line.replaceAll("\\s+\\$\\$", "$$");
+      }
+      sb.append(line).append("\n");
+    }
+    unfuckedResponse = sb.toString().trim();
+
     return unfuckedResponse;
   }
 
   @Override
   public void start(Stage primaryStage)
   {
-    primaryStage.setTitle("Latex Unfucker");
+    primaryStage.setTitle("Chatgpt Latex Unfucker");
 
-    TextArea inputArea = new TextArea();
-    inputArea.setText("Enter LaTeX text here...");
+    TextArea inputArea  = new TextArea();
 
     TextArea outputArea = new TextArea();
     outputArea.setText("Unfucked LaTeX will appear here...");
