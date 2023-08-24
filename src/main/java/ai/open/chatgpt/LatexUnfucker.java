@@ -17,15 +17,15 @@ public class LatexUnfucker extends
   {
     StringBuilder output             = new StringBuilder();
     StringBuilder buffer             = new StringBuilder();
-    boolean       insideMath         = false;
+    boolean       insideDollar       = false;
     boolean       insideDoubleDollar = false;
 
     for (int i = 0; i < input.length(); i++)
     {
       char c = input.charAt(i);
-      if (insideMath || insideDoubleDollar)
+      if (insideDollar || insideDoubleDollar)
       {
-        if ((insideMath && i < input.length() - 1 && c == '\\' && input.charAt(i + 1) == ')')
+        if ((insideDollar && i < input.length() - 1 && c == '\\' && input.charAt(i + 1) == ')')
                       || (insideDoubleDollar && i < input.length() - 1 && c == '\\' && input.charAt(i + 1) == ']'))
         {
           if (insideDoubleDollar)
@@ -35,7 +35,7 @@ public class LatexUnfucker extends
           }
           else
           {
-            insideMath = false;
+            insideDollar = false;
             output.append(buffer.toString().trim()).append("$");
           }
           buffer.setLength(0);
@@ -57,7 +57,7 @@ public class LatexUnfucker extends
           }
           else
           {
-            insideMath = true;
+            insideDollar = true;
             if (output.length() > 0 && output.charAt(output.length() - 1) == ' ')
             {
               output.append("$");
