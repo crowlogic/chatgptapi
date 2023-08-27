@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -102,7 +103,16 @@ public class LatexUnfucker extends
       outputArea.setText(output);
     });
 
-    Button copyButton = new Button("Copy to Clipboard");
+    Button clearButton = new Button("Clear Input");
+    clearButton.setOnAction(e ->
+    {
+      inputArea.clear(); // Assuming `inputArea` is the TextArea you want to clear
+    });
+
+    HBox   inputButtons = new HBox(processButton,
+                                   clearButton);
+
+    Button copyButton   = new Button("Copy to Clipboard");
     copyButton.setOnAction(e ->
     {
       String                 output    = outputArea.getText();
@@ -113,7 +123,7 @@ public class LatexUnfucker extends
     });
 
     VBox  vbox  = new VBox(inputArea,
-                           processButton,
+                           inputButtons,
                            outputArea,
                            copyButton);
 
