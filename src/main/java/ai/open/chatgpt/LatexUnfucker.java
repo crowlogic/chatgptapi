@@ -79,14 +79,12 @@ public class LatexUnfucker extends
       }
     }
 
-    String  result  = output.toString()
-                            .replace("\\{", "\\lbrace ")
-                            .replace("\\}", " \\rbrace")
-                            .replace(" \\, ", " ");
-    Pattern pattern = Pattern.compile(",\\s*(?=$|\\n)");
-    Matcher matcher = pattern.matcher(result);
-    result = matcher.replaceAll("");
-    return result;
+    return Pattern.compile(",\\s*(?=$|\\n)")
+                  .matcher(output.toString()
+                                 .replace("\\{", "\\lbrace ")
+                                 .replace("\\}", " \\rbrace")
+                                 .replace(" \\, ", " "))
+                  .replaceAll("");
   }
 
   @Override
