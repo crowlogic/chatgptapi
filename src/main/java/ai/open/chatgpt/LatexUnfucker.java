@@ -1,13 +1,15 @@
 package ai.open.chatgpt;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class LatexUnfucker extends
@@ -77,10 +79,13 @@ public class LatexUnfucker extends
       }
     }
 
-    String result = output.toString();
-    result = result.replace("\\{", "\\lbrace ");
-    result = result.replace("\\}", " \\rbrace");
-
+    String  result  = output.toString()
+                            .replace("\\{", "\\lbrace ")
+                            .replace("\\}", " \\rbrace")
+                            .replace(" \\, ", " ");
+    Pattern pattern = Pattern.compile(",\\s*(?=$|\\n)");
+    Matcher matcher = pattern.matcher(result);
+    result = matcher.replaceAll("");
     return result;
   }
 
@@ -122,10 +127,16 @@ public class LatexUnfucker extends
       clipboard.setContent(content);
     });
 
-    VBox  vbox  = new VBox(inputArea,
-                           inputButtons,
-                           outputArea,
-                           copyButton);
+    VBox vbox = new VBox(inputArea,
+                         inputButtons,
+                         outputArea,
+                         copyButton);
+
+    VBox.setVgrow(inputArea, Priority.ALWAYS);
+    VBox.setVgrow(outputArea, Priority.ALWAYS);
+    inputArea.setMinHeight(150); // Replace 150 with half of your VBox height
+    outputArea.setMinHeight(150); // Replace 150 with half of your VBox height
+    vbox.setFillWidth(true);
 
     Scene scene = new Scene(vbox,
                             400,
