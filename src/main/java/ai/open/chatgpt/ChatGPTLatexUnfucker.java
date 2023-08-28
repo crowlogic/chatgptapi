@@ -1,6 +1,5 @@
 package ai.open.chatgpt;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javafx.application.Application;
@@ -9,11 +8,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class LatexUnfucker extends
-                           Application
+public class ChatGPTLatexUnfucker extends
+                                  Application
 {
 
   public static String unfuck(String input)
@@ -87,7 +88,6 @@ public class LatexUnfucker extends
                   .replaceAll("");
   }
 
-  @Override
   public void start(Stage primaryStage)
   {
     primaryStage.setTitle("Chatgpt Latex Unfucker");
@@ -132,14 +132,14 @@ public class LatexUnfucker extends
 
     VBox.setVgrow(inputArea, Priority.ALWAYS);
     VBox.setVgrow(outputArea, Priority.ALWAYS);
-    inputArea.setMinHeight(150); // Replace 150 with half of your VBox height
-    outputArea.setMinHeight(150); // Replace 150 with half of your VBox height
+    inputArea.setMinHeight(inputArea.getHeight() / 2); // Replace 150 with half of your VBox height
+    outputArea.setMinHeight(outputArea.getHeight() / 2); // Replace 150 with half of your VBox height
     vbox.setFillWidth(true);
 
     Scene scene = new Scene(vbox,
                             400,
                             300);
-
+    scene.getStylesheets().add("dark-theme.css");
     primaryStage.setScene(scene);
     primaryStage.show();
   }
