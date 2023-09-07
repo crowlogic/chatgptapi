@@ -6,8 +6,10 @@ module chatgptapi
   requires transitive java.instrument;
   requires transitive java.logging;
   requires transitive javafx.controls;
+  requires transitive com.google.common;
   requires transitive org.seleniumhq.selenium.api;
   requires transitive org.seleniumhq.selenium.firefox_driver;
+  requires transitive dev.failsafe.core;
   
   exports ai.open.chatgpt;
 }
