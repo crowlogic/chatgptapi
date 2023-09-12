@@ -119,11 +119,9 @@ public class ChatGPTLatexUnfucker extends
     Button copyButton = new Button("Copy to Clipboard");
     copyButton.setOnAction(e ->
     {
-      String                 output    = outputArea.getText();
-      final Clipboard        clipboard = Clipboard.getSystemClipboard();
-      final ClipboardContent content   = new ClipboardContent();
-      content.putString(output);
-      clipboard.setContent(content);
+      ClipboardContent content = new ClipboardContent();
+      content.putString(outputArea.getText());
+      Clipboard.getSystemClipboard().setContent(content);
     });
 
     HBox buttons = new HBox(processButton,
