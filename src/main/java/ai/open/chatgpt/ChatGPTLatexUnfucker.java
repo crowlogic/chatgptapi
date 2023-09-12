@@ -148,15 +148,21 @@ public class ChatGPTLatexUnfucker extends
     Scene scene = new Scene(vbox,
                             400,
                             300);
-    scene.getStylesheets().add("dark-theme.css");
+    if (darkStyle)
+    {
+      scene.getStylesheets().add("darkStyle-theme.css");
+    }
     primaryStage.setMinWidth(800);
     primaryStage.setMinHeight(600);
     primaryStage.setScene(scene);
     primaryStage.show();
   }
 
+  static boolean darkStyle = false;
+
   public static void main(String[] args)
   {
+    darkStyle = (args.length > 0 && "darkStyle".equals(args[0]));
     launch(args);
   }
 }
