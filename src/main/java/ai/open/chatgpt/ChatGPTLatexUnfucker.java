@@ -162,7 +162,7 @@ public class ChatGPTLatexUnfucker extends
 
   public static void main(String[] args)
   {
-    darkStyle = (args.length > 0 && "darkStyle".equals(args[0]));
+    darkStyle = (args.length > 0 && "dark".equals(args[0]));
     launch(args);
   }
 }
