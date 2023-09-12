@@ -32,7 +32,7 @@ public class ChatGPTLatexUnfucker extends
           if (insideDoubleDollar)
           {
             insideDoubleDollar = false;
-            output.append(buffer.toString().trim()).append("$$");
+            output.append(buffer.toString().trim()).append("\n```");
           }
           else
           {
@@ -54,7 +54,7 @@ public class ChatGPTLatexUnfucker extends
           if (input.charAt(i + 1) == '[')
           {
             insideDoubleDollar = true;
-            output.append("$$");
+            output.append("```math\n");
           }
           else
           {
@@ -77,12 +77,12 @@ public class ChatGPTLatexUnfucker extends
       }
     }
 
-    return Pattern.compile(",\\s*(?=$|\\n)")
-                  .matcher(output.toString()
-                                 .replace("\\{", "\\lbrace ")
-                                 .replace("\\}", " \\rbrace")
-                                 .replace(" \\, ", " "))
-                  .replaceAll("");
+    // Remove leading whitespaces before $$ (now ```math\n)
+    String finalOutput = Pattern.compile("^[ \\t]+(?=```math\\n)", Pattern.MULTILINE)
+                                .matcher(output.toString())
+                                .replaceAll("");
+
+    return finalOutput;
   }
 
   public void start(Stage primaryStage)
