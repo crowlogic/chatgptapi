@@ -149,6 +149,8 @@ public class ChatGPTLatexUnfucker extends
                             400,
                             300);
     scene.getStylesheets().add("dark-theme.css");
+    primaryStage.setMinWidth(800);
+    primaryStage.setMinHeight(600);
     primaryStage.setScene(scene);
     primaryStage.show();
   }
