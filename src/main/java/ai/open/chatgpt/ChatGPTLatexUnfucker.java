@@ -6,8 +6,12 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.*;
-import javafx.scene.layout.*;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class ChatGPTLatexUnfucker extends
@@ -77,17 +81,12 @@ public class ChatGPTLatexUnfucker extends
       }
     }
 
-    // Remove leading whitespaces before $$ (now ```math\n)
-    String finalOutput = Pattern.compile("^[ \\t]+(?=```math\\n)", Pattern.MULTILINE)
-                                .matcher(output.toString())
-                                .replaceAll("");
-
-    return finalOutput;
+    return Pattern.compile("^[ \\t]+(?=```math\\n)", Pattern.MULTILINE).matcher(output.toString()).replaceAll("");
   }
 
   public void start(Stage primaryStage)
   {
-    primaryStage.setTitle("Chatgpt Latex Unfucker");
+    primaryStage.setTitle("ChatGPT Latex Unfucker");
 
     TextArea inputArea  = new TextArea();
 
@@ -98,15 +97,13 @@ public class ChatGPTLatexUnfucker extends
     Button processButton = new Button("Process");
     processButton.setOnAction(e ->
     {
-      String input  = inputArea.getText();
-      String output = unfuck(input);
-      outputArea.setText(output);
+      outputArea.setText(unfuck(inputArea.getText()));
     });
 
     Button clearButton = new Button("Clear Input");
     clearButton.setOnAction(e ->
     {
-      inputArea.clear(); // Assuming `inputArea` is the TextArea you want to clear
+      inputArea.clear();
     });
 
     Button pasteButton = new Button("Paste");
@@ -115,16 +112,11 @@ public class ChatGPTLatexUnfucker extends
       final Clipboard clipboard = Clipboard.getSystemClipboard();
       if (clipboard.hasContent(DataFormat.PLAIN_TEXT))
       {
-        String pasteText = clipboard.getContent(DataFormat.PLAIN_TEXT).toString();
-        inputArea.appendText(pasteText);
+        inputArea.appendText(clipboard.getContent(DataFormat.PLAIN_TEXT).toString());
       }
     });
 
-    HBox   inputButtons = new HBox(processButton,
-                                   clearButton,
-                                   pasteButton);
-
-    Button copyButton   = new Button("Copy to Clipboard");
+    Button copyButton = new Button("Copy to Clipboard");
     copyButton.setOnAction(e ->
     {
       String                 output    = outputArea.getText();
@@ -134,15 +126,19 @@ public class ChatGPTLatexUnfucker extends
       clipboard.setContent(content);
     });
 
-    VBox vbox = new VBox(inputArea,
-                         inputButtons,
-                         outputArea,
-                         copyButton);
+    HBox buttons = new HBox(processButton,
+                            clearButton,
+                            pasteButton,
+                            copyButton);
+
+    VBox vbox    = new VBox(inputArea,
+                            buttons,
+                            outputArea);
 
     VBox.setVgrow(inputArea, Priority.ALWAYS);
     VBox.setVgrow(outputArea, Priority.ALWAYS);
-    inputArea.setMinHeight(inputArea.getHeight() / 2); // Replace 150 with half of your VBox height
-    outputArea.setMinHeight(outputArea.getHeight() / 2); // Replace 150 with half of your VBox height
+    inputArea.setMinHeight(inputArea.getHeight() / 2);
+    outputArea.setMinHeight(outputArea.getHeight() / 2);
     vbox.setFillWidth(true);
 
     Scene scene = new Scene(vbox,
