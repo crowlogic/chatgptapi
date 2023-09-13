@@ -116,7 +116,7 @@ public class ChatGPTLatexUnfucker extends
       }
     });
 
-    Button copyButton = new Button("Copy to Clipboard");
+    Button copyButton = new Button("Copy");
     copyButton.setOnAction(e ->
     {
       ClipboardContent content = new ClipboardContent();
