@@ -14,7 +14,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class ChatGPTLatexUnfucker extends
+public class ChatGPTLatexDemunger extends
                                   Application
 {
 

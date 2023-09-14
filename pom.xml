@@ -9,7 +9,7 @@
 	<version>0.0.2</version>
 	<packaging>jar</packaging>
 
-	<name>chatgpt api</name>
+	<name>ChatGPTDemunger</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -30,6 +30,12 @@
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 			<version>4.12.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
@@ -67,9 +73,21 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.11.0</version>
 				<configuration>
-					<release>20</release>
+					<release>17</release>
 				</configuration>
 			</plugin>
+
+
+			<plugin>
+				<groupId>com.gluonhq</groupId>
+				<artifactId>gluonfx-maven-plugin</artifactId>
+				<version>1.0.19</version>
+				<configuration>
+					<mainClass>ai.open.chatgpt.ChatGPTLatexUnfucker</mainClass>
+				</configuration>
+			</plugin>
+
+
 		</plugins>
 	</build>
 </project>
