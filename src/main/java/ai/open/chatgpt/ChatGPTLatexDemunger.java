@@ -18,7 +18,7 @@ public class ChatGPTLatexDemunger extends
                                   Application
 {
 
-  public static String unfuck(String input)
+  public static String demunge(String input)
   {
     StringBuilder output             = new StringBuilder();
     StringBuilder buffer             = new StringBuilder();
@@ -86,18 +86,18 @@ public class ChatGPTLatexDemunger extends
 
   public void start(Stage primaryStage)
   {
-    primaryStage.setTitle("ChatGPT Latex Unfucker");
+    primaryStage.setTitle("ChatGPT Latex Demunger");
 
     TextArea inputArea  = new TextArea();
 
     TextArea outputArea = new TextArea();
-    outputArea.setText("Unfucked LaTeX will appear here...");
+    outputArea.setText("Demunged LaTeX suitable for use with markdown will appear here...");
     outputArea.setEditable(false);
 
     Button processButton = new Button("Process");
     processButton.setOnAction(e ->
     {
-      outputArea.setText(unfuck(inputArea.getText()));
+      outputArea.setText(demunge(inputArea.getText()));
     });
 
     Button clearButton = new Button("Clear Input");
