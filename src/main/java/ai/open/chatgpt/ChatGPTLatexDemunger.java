@@ -146,11 +146,11 @@ public class ChatGPTLatexDemunger extends
       delay.play();
     });
 
-    HBox buttons = new HBox(processButton,
-                            clearButton,
+    HBox buttons = new HBox(exhortButton,
                             pasteButton,
+                            processButton,
                             copyButton,
-                            exhortButton);
+                            clearButton);
     buttons.setSpacing(10.0);
     buttons.setAlignment(Pos.CENTER);
     VBox vbox = new VBox(inputArea,
