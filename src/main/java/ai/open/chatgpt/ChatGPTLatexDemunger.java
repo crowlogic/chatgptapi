@@ -2,17 +2,16 @@ package ai.open.chatgpt;
 
 import java.util.regex.Pattern;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.input.*;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class ChatGPTLatexDemunger extends
                                   Application
@@ -124,14 +123,39 @@ public class ChatGPTLatexDemunger extends
       Clipboard.getSystemClipboard().setContent(content);
     });
 
+    Button exhortButton = new Button("Exhort");
+    exhortButton.setOnAction(e ->
+    {
+      ClipboardContent content = new ClipboardContent();
+      content.putString("restate that verbatim as github flavored markdown with $ and $$ demarcating mathematical expressions so that they are interpreted as latex propery and return the response in a single code block");
+      Clipboard.getSystemClipboard().setContent(content);
+
+      // Create tooltip for notification
+      Tooltip tooltip = new Tooltip("Exhortation copied");
+      tooltip.setAutoHide(true);
+      tooltip.setShowDelay(Duration.ZERO);
+      tooltip.setHideDelay(Duration.seconds(2));
+      tooltip.setStyle("-fx-background-color: black; -fx-font-size: 12; -fx-padding: 5 10 5 10;");
+
+      Point2D p = exhortButton.localToScreen(exhortButton.getBoundsInLocal().getMaxX(),
+                                             exhortButton.getBoundsInLocal().getMaxY());
+      tooltip.show(exhortButton, p.getX() - 50, p.getY() - 30);
+
+      PauseTransition delay = new PauseTransition(Duration.seconds(2));
+      delay.setOnFinished(event -> tooltip.hide());
+      delay.play();
+    });
+
     HBox buttons = new HBox(processButton,
                             clearButton,
                             pasteButton,
-                            copyButton);
-
-    VBox vbox    = new VBox(inputArea,
-                            buttons,
-                            outputArea);
+                            copyButton,
+                            exhortButton);
+    buttons.setSpacing(10.0);
+    buttons.setAlignment(Pos.CENTER);
+    VBox vbox = new VBox(inputArea,
+                         buttons,
+                         outputArea);
 
     VBox.setVgrow(inputArea, Priority.ALWAYS);
     VBox.setVgrow(outputArea, Priority.ALWAYS);
