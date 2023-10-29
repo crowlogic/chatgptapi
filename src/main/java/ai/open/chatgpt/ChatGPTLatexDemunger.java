@@ -168,7 +168,7 @@ public class ChatGPTLatexDemunger extends
                             300);
     if (darkStyle)
     {
-      scene.getStylesheets().add("darkStyle-theme.css");
+      scene.getStylesheets().add("dark-theme.css");
     }
     primaryStage.setMinWidth(800);
     primaryStage.setMinHeight(600);
