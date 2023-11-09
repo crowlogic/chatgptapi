@@ -80,7 +80,9 @@ public class ChatGPTLatexDemunger extends
       }
     }
 
-    return Pattern.compile("^[ \\t]+(?=```math\\n)", Pattern.MULTILINE).matcher(output.toString()).replaceAll("");
+    String result = Pattern.compile("^[ \\t]+(?=```math\\n)", Pattern.MULTILINE).matcher(output.toString()).replaceAll("");
+    return result.replace("\\, dt", "dt");
+    
   }
 
   public void start(Stage primaryStage)
