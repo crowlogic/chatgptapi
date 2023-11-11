@@ -1,5 +1,6 @@
 package ai.open.chatgpt;
 
+import java.io.*;
 import java.util.regex.Pattern;
 
 import javafx.animation.PauseTransition;
@@ -24,6 +25,73 @@ public class ChatGPTLatexDemunger extends
     boolean       insideDollar       = false;
     boolean       insideDoubleDollar = false;
 
+    filterFirst(input, output, buffer, insideDollar, insideDoubleDollar);
+
+    String wad = filterSecond(output);
+
+    return filterLast(wad);
+  }
+
+  /**
+   * TODO: transform
+   * 
+   * <pre>
+   $$
+    xyz
+   $$
+   
+   to
+   
+   $$xyx$$
+   * </pre>
+   * 
+   * @param wad
+   * @return
+   */
+  private static String filterLast(String wad)
+  {
+    StringBuilder  builder = new StringBuilder();
+
+    BufferedReader reader  = new BufferedReader(new StringReader(wad));
+    String         line    = null;
+
+    try
+    {
+      while ((line = reader.readLine()) != null)
+      {
+        if (containsWhitespaceBeforeDollar(line))
+        {
+          builder.append(line.stripLeading() + "\n");
+        }
+        else
+        {
+          builder.append(line + "\n");
+        }
+      }
+    }
+    catch (IOException e)
+    {
+      throw new RuntimeException(e.getMessage(),
+                                 e);
+    }
+    return builder.toString();
+  }
+
+  private static String filterSecond(StringBuilder output)
+  {
+    String result = Pattern.compile("^[ \\t]+(?=```math\\n)", Pattern.MULTILINE)
+                           .matcher(output.toString())
+                           .replaceAll("");
+    String wad    = result.replace("\\, dt", "dt");
+    return wad;
+  }
+
+  private static void filterFirst(String input,
+                                  StringBuilder output,
+                                  StringBuilder buffer,
+                                  boolean insideDollar,
+                                  boolean insideDoubleDollar)
+  {
     for (int i = 0; i < input.length(); i++)
     {
       char c = input.charAt(i);
@@ -79,10 +147,13 @@ public class ChatGPTLatexDemunger extends
         }
       }
     }
+  }
 
-    String result = Pattern.compile("^[ \\t]+(?=```math\\n)", Pattern.MULTILINE).matcher(output.toString()).replaceAll("");
-    return result.replace("\\, dt", "dt");
-    
+  public static boolean containsWhitespaceBeforeDollar(String input)
+  {
+    // Check if the string matches the pattern: zero or more whitespaces followed by
+    // $$
+    return input.matches("\\s+\\$\\$.*");
   }
 
   public void start(Stage primaryStage)
