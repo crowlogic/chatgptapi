@@ -14,9 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
+import javafx.scene.input.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -41,22 +39,6 @@ public class ChatGPTLatexDemunger extends
     return filterLast(wad);
   }
 
-  /**
-   * TODO: transform
-   * 
-   * <pre>
-   $$
-    xyz
-   $$
-   
-   to
-   
-   $$xyx$$
-   * </pre>
-   * 
-   * @param wad
-   * @return
-   */
   static String filterLast(String wad)
   {
     StringBuilder  builder = new StringBuilder();
@@ -270,6 +252,14 @@ public class ChatGPTLatexDemunger extends
     Scene scene = new Scene(vbox,
                             400,
                             300);
+    scene.setOnKeyPressed(event ->
+    {
+      if (event.getCode() == KeyCode.ESCAPE)
+      {
+        primaryStage.close(); // Close the application
+      }
+    });
+
     if (darkStyle)
     {
       scene.getStylesheets().add("dark-theme.css");
