@@ -1,6 +1,9 @@
 package ai.open.chatgpt;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javafx.animation.PauseTransition;
@@ -8,9 +11,15 @@ import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.input.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -48,7 +57,7 @@ public class ChatGPTLatexDemunger extends
    * @param wad
    * @return
    */
-  private static String filterLast(String wad)
+  static String filterLast(String wad)
   {
     StringBuilder  builder = new StringBuilder();
 
@@ -57,15 +66,37 @@ public class ChatGPTLatexDemunger extends
 
     try
     {
+      boolean insideDollarBlock = false;
+
+      // Pattern to match standalone $$
+      Pattern pattern           = Pattern.compile("^\\s*\\$\\$\\s*$");
+
       while ((line = reader.readLine()) != null)
       {
-        if (containsWhitespaceBeforeDollar(line))
+        Matcher matcher = pattern.matcher(line);
+
+        if (matcher.find())
         {
-          builder.append(line.stripLeading() + "\n");
+          if (insideDollarBlock)
+          {
+            // Closing $$
+            builder.append(line).append("\n");
+          }
+          else
+          {
+            // Opening $$
+            builder.append("\n").append(line);
+          }
+          insideDollarBlock = !insideDollarBlock; // Toggle the state
         }
         else
         {
-          builder.append(line + "\n");
+          builder.append(line);
+        }
+
+        if (!insideDollarBlock || matcher.find())
+        {
+          builder.append("\n");
         }
       }
     }
