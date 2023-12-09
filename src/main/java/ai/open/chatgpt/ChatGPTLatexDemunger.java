@@ -67,13 +67,13 @@ public class ChatGPTLatexDemunger extends
           else
           {
             // Opening $$
-            builder.append("\n").append(line);
+            builder.append("\n").append(line.strip());
           }
           insideDollarBlock = !insideDollarBlock; // Toggle the state
         }
         else
         {
-          builder.append(line);
+          builder.append(line.strip());
         }
 
         if (!insideDollarBlock || matcher.find())
