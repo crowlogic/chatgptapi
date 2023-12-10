@@ -15,7 +15,7 @@ public class ChatGPTLatexDemungerTest extends
 
     System.out.println("-----\nDisorganized\n-----\n " + disorganized + "-----\n-----\n");
 
-    String organized = ChatGPTLatexDemunger.filterLast(disorganized);
+    String organized = ChatGPTLatexDemungerAndBeautifer.filterLast(disorganized);
 
     System.out.println("-----\nOrganized\n-----\n " + organized + "-----\n-----\n");
 
