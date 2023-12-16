@@ -24,7 +24,9 @@ public class ChatGPTLatexDemungerAndBeautifer extends
     return input.replaceAll(",(?=\\s*\\$\\$)", "")
                 .replaceAll(",\\s*(?=\\\\quad)", "")
                 .replaceAll("\\\\\\(\\s*(.*?)\\s*\\\\\\)", "\\$$1\\$")
-                .replaceAll("\\\\\\[([\\s\\S]*?)\\\\\\]", "\n\n\\$\\$$1\\$\\$\n\n");
+                .replaceAll("\\\\\\[([\\s\\S]*?)\\\\\\]", "\n\n\\$\\$$1\\$\\$\n\n")
+                .replaceAll(",(?:\\s|\n)+\\$\\$", "\\$\\$");
+
   }
 
   public void start(Stage primaryStage)
