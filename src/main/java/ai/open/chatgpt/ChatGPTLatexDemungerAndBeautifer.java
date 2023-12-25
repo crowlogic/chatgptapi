@@ -126,8 +126,11 @@ public class ChatGPTLatexDemungerAndBeautifer extends
     }
     primaryStage.setMinWidth(800);
     primaryStage.setMinHeight(600);
+    primaryStage.setWidth(1280);
+    primaryStage.setHeight(960);
     primaryStage.setScene(scene);
     primaryStage.show();
+    primaryStage.centerOnScreen();
   }
 
   static boolean darkStyle = false;

@@ -1,6 +1,5 @@
 #!/bin/sh
 
-FMDIR=$(dirname $(readlink -f $0))/..
-cd $FMDIR
-bin/runc ai.open.chatgpt.ChatGPTLatexDemungerAndBeautifer dark
+ChatGPTDemunger dark
+
 
