@@ -16,6 +16,23 @@
 		<mdep.outputFile>class.path</mdep.outputFile>
 	</properties>
 
+	<profiles>
+		<profile>
+			<id>host</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<gluonfx.target>host</gluonfx.target>
+			</properties>
+		</profile>
+		<profile>
+			<id>android</id>
+			<properties>
+				<gluonfx.target>android</gluonfx.target>
+			</properties>
+		</profile>
+	</profiles>
 
 	<dependencies>
 		<dependency>
@@ -61,28 +78,31 @@
 				<version>0.0.8</version>
 				<configuration>
 					<mainClass>ai.open.chatgpt.ChatGPTLatexDemungerAndBeautifer</mainClass>
-					
 				</configuration>
 			</plugin>
 
 			<plugin>
 				<groupId>com.gluonhq</groupId>
 				<artifactId>gluonfx-maven-plugin</artifactId>
-				<version>1.0.21</version>
+				<version>1.0.22</version>
 
 				<configuration>
+					<target>${gluonfx.target}</target>
 					<mainClass>ai.open.chatgpt.ChatGPTLatexDemungerAndBeautifer</mainClass>
+					<verbose>true</verbose>
 				</configuration>
 
 				<executions>
 					<execution>
 						<phase>package</phase>
 						<goals>
-							<goal>package</goal>
+							<goal>build</goal>
+							<goal>run</goal>
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
 		</plugins>
 	</build>
+
 </project>
