@@ -61,12 +61,7 @@ public class Frontend extends
     {
       CompletionRequest request     = CompletionRequest.builder()
                                                        .prompt(input)
-                                                       .model("text-davinci-004")                                     // Replace
-                                                                                                                      // with
-                                                                                                                      // the
-                                                                                                                      // GPT-4
-                                                                                                                      // model
-                                                                                                                      // name
+                                                       .model("text-davinci-004")                                    
                                                        .maxTokens(150)
                                                        .build();
       CompletionResult  response    = openAiService.createCompletion(request);
